@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { Link } from "@reach/router";
+import React, { useEffect, useState } from "react";
 import { getPokemonById } from "../api/pokemon";
-import capitalize from "../utils/capitalize";
-import normalizeString from "../utils/normalizeString";
+import PokemonDetail from "../components/PokemonDetail";
 
-const PokemonDetail = ({ id }) => {
+const PokemonDetailScreen = ({ id }) => {
   const [pokemon, setPokemon] = useState(null);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const PokemonDetail = ({ id }) => {
     return <h1>Aquí aparecerá el Pokémon</h1>;
   }
 
-  const movesList = pokemon.moves
+  const learnset = pokemon.moves
     .filter(move =>
       move.version_group_details.some(
         vgd => vgd.move_learn_method.name === "level-up"
@@ -38,7 +38,7 @@ const PokemonDetail = ({ id }) => {
       level_learned_at: move.version_group_details[0].level_learned_at
     }));
 
-  const orderedMovesList = [...movesList].sort(
+  const orderedLearnset = [...learnset].sort(
     (a, b) => a.level_learned_at - b.level_learned_at
   );
 
@@ -49,37 +49,22 @@ const PokemonDetail = ({ id }) => {
       is_hidden: ability.is_hidden
     }));
 
+  // investigar O(n) de Array.sort()
+  const typesList = [...pokemon.types].sort((a, b) => a.slot - b.slot);
+
   return (
-    <article>
-      <img src={pokemon.sprites.front_default} />
-      <h2>{pokemon.id}</h2>
-      <h1>{capitalize(pokemon.name)}</h1>
-      <h4>Types</h4>
-      <ul>
-        {[...pokemon.types].reverse().map(({ slot, type }) => (
-          <li key={type.name}>{capitalize(type.name)}</li>
-        ))}
-      </ul>
-      <h4>Abilities</h4>
-      <ul>
-        {abilitiesList.map(({ name, is_hidden }) => (
-          <li key={name}>
-            {normalizeString(name)}{" "}
-            {is_hidden ? <small>Hidden ability</small> : null}
-          </li>
-        ))}
-      </ul>
-      <h4>Learnset</h4>
-      <dl>
-        {orderedMovesList.map(({ name, level_learned_at }) => (
-          <React.Fragment key={name}>
-            <dt>{`Level ${level_learned_at}`}</dt>
-            <dd>{normalizeString(name)}</dd>
-          </React.Fragment>
-        ))}
-      </dl>
-    </article>
+    <React.Fragment>
+      <Link to="/">{"<< Regresar a Home"}</Link>
+      <PokemonDetail
+        id={pokemon.id}
+        sprite={pokemon.sprites.front_default}
+        name={pokemon.name}
+        learnset={orderedLearnset}
+        types={typesList}
+        abilities={abilitiesList}
+      />
+    </React.Fragment>
   );
 };
 
-export default PokemonDetail;
+export default PokemonDetailScreen;

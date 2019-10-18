@@ -5,8 +5,8 @@ import "./index.css";
 const PokemonList = ({ pokemonList }) => {
   return (
     <ul className="PokemonList">
-      {pokemonList.map(pokemon => (
-        <PokemonCard pokemon={pokemon} key={pokemon.id} />
+      {pokemonList.map(pokemonObj => (
+        <PokemonCard {...pokemonObj} key={pokemonObj.id} />
       ))}
     </ul>
   );
