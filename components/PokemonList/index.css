@@ -1,0 +1,6 @@
+.PokemonList {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  justify-content: space-around;
+}

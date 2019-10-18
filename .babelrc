@@ -1,0 +1,13 @@
+{
+  "presets": ["@babel/preset-react", ["@babel/preset-env", {
+    "targets": "> 0.25% in MX, not dead, not ie 11, not op_mini all, not android < 67, chrome > 54"
+  }]],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ]
+  ]
+}
